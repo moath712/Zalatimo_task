@@ -13,7 +13,7 @@ class ScreenTwo extends StatefulWidget {
 class _ScreenTwoState extends State<ScreenTwo> {
   final List<Product2> _products = [];
   int _currentPage = 1;
-  bool _isLoading = true;
+  bool _isLoading = false;
 
   Future<void> _fetchProducts() async {
     final url =
@@ -23,7 +23,6 @@ class _ScreenTwoState extends State<ScreenTwo> {
     final List<Product2> products =
         data.map((product) => Product2.fromJson(product)).toList();
     setState(() {
-      _isLoading = false;
       _products.addAll(products);
     });
   }
@@ -32,7 +31,6 @@ class _ScreenTwoState extends State<ScreenTwo> {
   void initState() {
     super.initState();
     _fetchProducts();
-    _isLoading = true;
   }
 
   @override
@@ -54,7 +52,9 @@ class _ScreenTwoState extends State<ScreenTwo> {
                 if (index == _products.length - 1) {
                   _currentPage++;
                   _fetchProducts();
+                  _isLoading = true;
                 }
+
                 final product = _products[index];
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
