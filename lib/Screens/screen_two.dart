@@ -11,7 +11,7 @@ class ScreenTwo extends StatefulWidget {
 }
 
 class _ScreenTwoState extends State<ScreenTwo> {
-  final List<Product> _products = [];
+  final List<Product2> _products = [];
   int _currentPage = 1;
   bool _isLoading = true;
 
@@ -20,8 +20,8 @@ class _ScreenTwoState extends State<ScreenTwo> {
         'https://zalatimoprod.rhinosoft.io/api/products?maxPrice=1000&minPrice=0&modes=ALL&page=$_currentPage&pageSize=10';
     final response = await http.get(Uri.parse(url));
     final List<dynamic> data = json.decode(response.body)['data'];
-    final List<Product> products =
-        data.map((product) => Product.fromJson(product)).toList();
+    final List<Product2> products =
+        data.map((product) => Product2.fromJson(product)).toList();
     setState(() {
       _isLoading = false;
       _products.addAll(products);
@@ -105,6 +105,14 @@ class _ScreenTwoState extends State<ScreenTwo> {
                       const SizedBox(
                         height: 10,
                       ),
+                      Text(
+                        ' ${product.price.toStringAsFixed(2)} JOD',
+                        style: const TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'MyriadPro',
+                            fontWeight: FontWeight.normal,
+                            color: MyColors.color1),
+                      ),
                     ],
                   ),
                 );
@@ -122,19 +130,23 @@ class _ScreenTwoState extends State<ScreenTwo> {
   }
 }
 
-class Product {
+class Product2 {
   final String name;
   final String mediaUrl;
+  final double price;
+  String? currency;
+  Product2(
+      {required this.name,
+      required this.mediaUrl,
+      required this.price,
+      this.currency});
 
-  Product({
-    required this.name,
-    required this.mediaUrl,
-  });
-
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
+  factory Product2.fromJson(Map<String, dynamic> json) {
+    return Product2(
       name: json['name'],
       mediaUrl: json['mediaUrl'],
+      price: json['price'].toDouble(),
+      currency: json['currency'],
     );
   }
 }
